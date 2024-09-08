@@ -1,22 +1,13 @@
 class Category {
-  private name: string;
-  private taxPercentage: number;
-
-  public getName(): string {
-      return this.name;
+  constructor(
+    // `name` is not used in this kata but probably has a purpose in a real use case so I'm keeping it
+    public readonly name: string,
+    public readonly taxPercentage: number
+  ) {
+    this.name = name;
+    this.taxPercentage = taxPercentage;
   }
 
-  public setName(name: string): void {
-      this.name = name;
-  }
-
-  public getTaxPercentage(): number {
-      return this.taxPercentage;
-  }
-
-  public setTaxPercentage(taxPercentage: number) {
-      this.taxPercentage = taxPercentage;
-  }
 }
 
 export default Category;

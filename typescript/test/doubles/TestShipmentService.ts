@@ -1,4 +1,4 @@
-import Order from '../../src/domain/Order';
+import Order from '../../src/domain/Order/Order';
 import { ShipmentService } from '../../src/service/ShipmentService';
 
 class TestShipmentService implements ShipmentService {

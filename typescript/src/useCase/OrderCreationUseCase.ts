@@ -1,11 +1,11 @@
-import Order from '../domain/Order';
-import OrderItem from '../domain/OrderItem';
-import { OrderStatus } from '../domain/OrderStatus';
+import OrderItem from '../domain/Order/OrderItem';
 import Product from '../domain/Product';
 import OrderRepository from '../repository/OrderRepository';
 import { ProductCatalog } from '../repository/ProductCatalog';
-import SellItemsRequest from './SellItemsRequest';
-import UnknownProductException from './UnknownProductException';
+import UnknownProductException from '../domain/Exceptions/UnknownProductException';
+
+import OrderBuilder from '../domain/Order/OrderBuilder';
+import SellItemRequest from '../domain/SellItemRequest';
 
 class OrderCreationUseCase {
   private readonly orderRepository: OrderRepository;
@@ -16,39 +16,23 @@ class OrderCreationUseCase {
     this.productCatalog = productCatalog;
   }
 
-  public run(request: SellItemsRequest): void {
-    const order: Order = new Order();
-    order.setStatus(OrderStatus.CREATED);
-    order.setItems([]);
-    order.setCurrency('EUR');
-    order.setTotal(0);
-    order.setTax(0);
+  public run(request: SellItemRequest[]): void {
+    const orderBuilder = new OrderBuilder();
 
-    for (const itemRequest of request.getRequests()) {
-       const product: Product = this.productCatalog.getByName(itemRequest.getProductName());
+    for (const itemRequest of request) {
+      const product: Product = this.productCatalog.getByName(itemRequest.productName);
 
       if (product === undefined) {
         throw new UnknownProductException();
       }
+
       else {
-        const unitaryTax: number = Math.round(product.getPrice() / 100 * product.getCategory().getTaxPercentage() * 100) / 100;
-        const unitaryTaxedAmount: number = Math.round((product.getPrice() + unitaryTax) * 100) / 100;
-        const taxedAmount: number = Math.round(unitaryTaxedAmount * itemRequest.getQuantity() * 100) / 100;
-        const taxAmount: number = unitaryTax * itemRequest.getQuantity();
-
-        const orderItem: OrderItem = new OrderItem();
-        orderItem.setProduct(product);
-        orderItem.setQuantity(itemRequest.getQuantity());
-        orderItem.setTax(taxAmount);
-        orderItem.setTaxedAmount(taxedAmount);
-        order.getItems().push(orderItem);
-
-        order.setTotal(order.getTotal() + taxedAmount);
-        order.setTax(order.getTax() + taxAmount);
+        const orderItem: OrderItem = new OrderItem(product, itemRequest.quantity);
+        orderBuilder.addItem(orderItem);
       }
     }
 
-    this.orderRepository.save(order);
+    this.orderRepository.save(orderBuilder.build());
   }
 }
 
