@@ -1,34 +1,23 @@
-import Product from './Product';
+import Product from '../Product';
+import PriceRounder from '../PriceRounder';
 
 class OrderItem {
 
   constructor(
-    private product: Product,
-    private quantity: number
+    public readonly product: Product,
+    public readonly quantity: number
   ) {}
 
-  public getProduct(): Product {
-    return this.product;
-  }
-
-  public getQuantity(): number {
-    return this.quantity;
-  }
-
   private computeTaxExcludedPrice(): number {
-    return this.round(this.product.getPrice() * this.quantity);
+    return new PriceRounder(this.product.getPrice() * this.quantity).compute();
   }
 
   public computeTaxIncludedPrice(): number {
-    return this.round(this.product.computeTaxedPrice() * this.quantity);
+    return new PriceRounder(this.product.computeTaxedPrice() * this.quantity).compute();
   }
 
   public computeTax(): number {
-    return this.round(this.computeTaxIncludedPrice() - this.computeTaxExcludedPrice());
-  }
-
-  private round(price: number): number {
-    return Math.round(price * 100) / 100;
+    return new PriceRounder(this.computeTaxIncludedPrice() - this.computeTaxExcludedPrice()).compute();
   }
 }
 

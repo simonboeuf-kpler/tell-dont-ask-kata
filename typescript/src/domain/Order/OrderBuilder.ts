@@ -1,11 +1,11 @@
-import OrderItem from '../OrderItem';
-import {OrderStatus} from '../OrderStatus';
+import OrderItem from './OrderItem';
+import {OrderStatus} from './OrderStatus';
 import Order from './Order';
 
 export default class OrderBuilder {
-  private items: OrderItem[];
-  private status: OrderStatus;
   private id: number;
+  private readonly status: OrderStatus;
+  private items: OrderItem[];
 
   constructor() {
     this.items = [];
@@ -14,16 +14,6 @@ export default class OrderBuilder {
 
   addItem(item: OrderItem): OrderBuilder {
     this.items = [...this.items, item];
-    return this;
-  }
-
-  setStatus(status: OrderStatus): OrderBuilder {
-    this.status = status;
-    return this;
-  }
-
-  setId(id: number): OrderBuilder {
-    this.id = id;
     return this;
   }
 

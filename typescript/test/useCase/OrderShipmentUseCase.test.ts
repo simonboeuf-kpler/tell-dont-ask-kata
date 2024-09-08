@@ -1,11 +1,11 @@
 import Order from '../../src/domain/Order/Order';
-import {OrderStatus} from '../../src/domain/OrderStatus';
-import OrderCannotBeShippedException from '../../src/useCase/Exceptions/OrderCannotBeShippedException';
-import OrderCannotBeShippedTwiceException from '../../src/useCase/Exceptions/OrderCannotBeShippedTwiceException';
+import {OrderStatus} from '../../src/domain/Order/OrderStatus';
+import OrderCannotBeShippedException from '../../src/domain/Exceptions/OrderCannotBeShippedException';
+import OrderCannotBeShippedTwiceException from '../../src/domain/Exceptions/OrderCannotBeShippedTwiceException';
 import OrderShipmentUseCase from '../../src/useCase/OrderShipmentUseCase';
 import TestOrderRepository from '../doubles/TestOrderRepository';
 import TestShipmentService from '../doubles/TestShipmentService';
-import OrderBuilder from '../../src/domain/Order/OrderBuilder';
+import TestOrderBuilder from '../doubles/TestOrderBuilder';
 
 describe('OrderShipmentUseCase', () => {
   let orderRepository: TestOrderRepository;
@@ -19,7 +19,7 @@ describe('OrderShipmentUseCase', () => {
   });
 
   it('shipApprovedOrder', () => {
-    const initialOrder: Order = new OrderBuilder()
+    const initialOrder: Order = new TestOrderBuilder()
       .setId(1)
       .setStatus(OrderStatus.APPROVED)
       .build();
@@ -33,7 +33,7 @@ describe('OrderShipmentUseCase', () => {
   });
 
   it('createdOrdersCannotBeShipped', () => {
-    const initialOrder: Order = new OrderBuilder()
+    const initialOrder: Order = new TestOrderBuilder()
       .setId(2)
       .setStatus(OrderStatus.CREATED)
       .build();
@@ -47,7 +47,7 @@ describe('OrderShipmentUseCase', () => {
   });
 
   it('rejectedOrdersCannotBeShipped', () => {
-    const initialOrder: Order = new OrderBuilder()
+    const initialOrder: Order = new TestOrderBuilder()
       .setId(3)
       .setStatus(OrderStatus.REJECTED)
       .build();
@@ -61,7 +61,7 @@ describe('OrderShipmentUseCase', () => {
   });
 
   it('shippedOrdersCannotBeShippedAgain', () => {
-    const initialOrder: Order = new OrderBuilder()
+    const initialOrder: Order = new TestOrderBuilder()
       .setId(4)
       .setStatus(OrderStatus.SHIPPED)
       .build();

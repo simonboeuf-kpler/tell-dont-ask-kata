@@ -1,4 +1,5 @@
 import Category from './Category';
+import PriceRounder from './PriceRounder';
 
 class Product {
   constructor(
@@ -18,8 +19,8 @@ class Product {
 
 
   public computeTaxedPrice(): number {
-    const taxAmount = Math.round(this.price / 100 * this.category.getTaxPercentage() * 100) / 100;
-    return this.price + taxAmount;
+    const taxAmount = this.price * this.category.taxPercentage / 100;
+    return new PriceRounder(this.price + taxAmount).compute();
   }
 }
 
