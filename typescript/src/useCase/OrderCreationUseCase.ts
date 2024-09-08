@@ -2,10 +2,10 @@ import OrderItem from '../domain/OrderItem';
 import Product from '../domain/Product';
 import OrderRepository from '../repository/OrderRepository';
 import { ProductCatalog } from '../repository/ProductCatalog';
-import SellItemsRequest from './SellItemsRequest';
 import UnknownProductException from './Exceptions/UnknownProductException';
 
 import OrderBuilder from '../domain/Order/OrderBuilder';
+import SellItemRequest from '../domain/SellItemRequest';
 
 class OrderCreationUseCase {
   private readonly orderRepository: OrderRepository;
@@ -16,10 +16,10 @@ class OrderCreationUseCase {
     this.productCatalog = productCatalog;
   }
 
-  public run(request: SellItemsRequest): void {
+  public run(request: SellItemRequest[]): void {
     const orderBuilder = new OrderBuilder();
 
-    for (const itemRequest of request.getRequests()) {
+    for (const itemRequest of request) {
       const product: Product = this.productCatalog.getByName(itemRequest.getProductName());
 
       if (product === undefined) {

@@ -4,15 +4,14 @@ import { OrderStatus } from '../../src/domain/OrderStatus';
 import Product from '../../src/domain/Product';
 import { ProductCatalog } from '../../src/repository/ProductCatalog';
 import OrderCreationUseCase from '../../src/useCase/OrderCreationUseCase';
-import SellItemRequest from '../../src/useCase/SellItemRequest';
-import SellItemsRequest from '../../src/useCase/SellItemsRequest';
+import SellItemRequest from '../../src/domain/SellItemRequest';
 import UnknownProductException from '../../src/useCase/Exceptions/UnknownProductException';
 import InMemoryProductCatalog from '../doubles/InMemoryProductCatalog';
 import TestOrderRepository from '../doubles/TestOrderRepository';
 
 describe('OrderApprovalUseCase', () => {
   const orderRepository: TestOrderRepository = new TestOrderRepository();
-  const food: Category = new Category(10);
+  const food: Category = new Category('foo', 10);
 
   const saladProduct = new Product('salad', 3.56, food);
   const tomatoProduct = new Product('tomato', 4.65, food);
@@ -28,10 +27,7 @@ describe('OrderApprovalUseCase', () => {
     tomatoRequest.setProductName('tomato');
     tomatoRequest.setQuantity(3);
 
-    const request: SellItemsRequest = new SellItemsRequest();
-    request.setRequests([]);
-    request.getRequests().push(saladRequest);
-    request.getRequests().push(tomatoRequest);
+    const request: SellItemRequest[] = [saladRequest, tomatoRequest];
 
     useCase.run(request);
 
@@ -53,11 +49,9 @@ describe('OrderApprovalUseCase', () => {
   });
 
   it('unknownProduct', () => {
-    const request: SellItemsRequest = new SellItemsRequest();
-    request.setRequests([]);
     const unknownProductRequest: SellItemRequest = new SellItemRequest();
     unknownProductRequest.setProductName('unknown product');
-    request.getRequests().push(unknownProductRequest);
+    const request: SellItemRequest[] = [unknownProductRequest];
 
     expect(() => useCase.run(request)).toThrow(UnknownProductException);
   });
