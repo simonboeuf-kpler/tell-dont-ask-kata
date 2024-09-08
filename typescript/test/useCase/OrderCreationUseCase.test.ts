@@ -19,13 +19,8 @@ describe('OrderApprovalUseCase', () => {
   const useCase: OrderCreationUseCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
   it('sellMultipleItems', () => {
-    const saladRequest: SellItemRequest = new SellItemRequest();
-    saladRequest.setProductName('salad');
-    saladRequest.setQuantity(2);
-
-    const tomatoRequest: SellItemRequest = new SellItemRequest();
-    tomatoRequest.setProductName('tomato');
-    tomatoRequest.setQuantity(3);
+    const saladRequest: SellItemRequest = new SellItemRequest('salad', 2);
+    const tomatoRequest: SellItemRequest = new SellItemRequest('tomato', 3);
 
     const request: SellItemRequest[] = [saladRequest, tomatoRequest];
 
@@ -49,8 +44,8 @@ describe('OrderApprovalUseCase', () => {
   });
 
   it('unknownProduct', () => {
-    const unknownProductRequest: SellItemRequest = new SellItemRequest();
-    unknownProductRequest.setProductName('unknown product');
+    const unknownProductRequest: SellItemRequest = new SellItemRequest('unknown product', 1);
+
     const request: SellItemRequest[] = [unknownProductRequest];
 
     expect(() => useCase.run(request)).toThrow(UnknownProductException);
