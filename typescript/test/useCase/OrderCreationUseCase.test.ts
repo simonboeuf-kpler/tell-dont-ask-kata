@@ -6,7 +6,7 @@ import { ProductCatalog } from '../../src/repository/ProductCatalog';
 import OrderCreationUseCase from '../../src/useCase/OrderCreationUseCase';
 import SellItemRequest from '../../src/useCase/SellItemRequest';
 import SellItemsRequest from '../../src/useCase/SellItemsRequest';
-import UnknownProductException from '../../src/useCase/UnknownProductException';
+import UnknownProductException from '../../src/useCase/Exceptions/UnknownProductException';
 import InMemoryProductCatalog from '../doubles/InMemoryProductCatalog';
 import TestOrderRepository from '../doubles/TestOrderRepository';
 
@@ -39,7 +39,6 @@ describe('OrderApprovalUseCase', () => {
     expect(insertedOrder.getStatus()).toBe(OrderStatus.CREATED);
     expect(insertedOrder.computeTotal()).toBe(23.20);
     expect(insertedOrder.computeTaxAmount()).toBe((2.13));
-    expect(insertedOrder.getCurrency()).toBe(('EUR'));
     expect(insertedOrder.getItems().length).toBe(2);
     expect(insertedOrder.getItems()[0].getProduct().getName()).toBe('salad');
     expect(insertedOrder.getItems()[0].getProduct().getPrice()).toBe(3.56);

@@ -2,18 +2,11 @@ import OrderItem from '../OrderItem';
 import {OrderStatus} from '../OrderStatus';
 
 class Order {
-
-
   constructor(
-    private currency: string,
     private items: OrderItem[],
     private status: OrderStatus,
     private id: number
   ) {}
-
-  public getCurrency(): string {
-    return this.currency;
-  }
 
   public getItems(): OrderItem[] {
     return this.items;
@@ -23,16 +16,12 @@ class Order {
     return this.status;
   }
 
-  public setStatus(status: OrderStatus): void {
-    this.status = status;
-  }
-
   public getId(): number {
     return this.id;
   }
 
-  public setId(id: number): void {
-    this.id = id;
+  public ship(): void {
+    this.status = OrderStatus.SHIPPED;
   }
 
   public isAlreadyShipped(): boolean {

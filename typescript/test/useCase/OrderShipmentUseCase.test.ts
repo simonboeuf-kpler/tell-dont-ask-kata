@@ -1,8 +1,7 @@
 import Order from '../../src/domain/Order/Order';
 import {OrderStatus} from '../../src/domain/OrderStatus';
-import OrderCannotBeShippedException from '../../src/useCase/OrderCannotBeShippedException';
-import OrderCannotBeShippedTwiceException from '../../src/useCase/OrderCannotBeShippedTwiceException';
-import OrderShipmentRequest from '../../src/useCase/OrderShipmentRequest';
+import OrderCannotBeShippedException from '../../src/useCase/Exceptions/OrderCannotBeShippedException';
+import OrderCannotBeShippedTwiceException from '../../src/useCase/Exceptions/OrderCannotBeShippedTwiceException';
 import OrderShipmentUseCase from '../../src/useCase/OrderShipmentUseCase';
 import TestOrderRepository from '../doubles/TestOrderRepository';
 import TestShipmentService from '../doubles/TestShipmentService';
@@ -26,10 +25,8 @@ describe('OrderShipmentUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderShipmentRequest = new OrderShipmentRequest();
-    request.setOrderId(1);
-
-    useCase.run(request);
+    const orderId = 1;
+    useCase.run(orderId);
 
     expect(orderRepository.getSavedOrder().getStatus()).toBe(OrderStatus.SHIPPED);
     expect(shipmentService.getShippedOrder()).toBe(initialOrder);
@@ -42,10 +39,9 @@ describe('OrderShipmentUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderShipmentRequest = new OrderShipmentRequest();
-    request.setOrderId(2);
+    const orderId: number = 2;
 
-    expect(() => useCase.run(request)).toThrow(OrderCannotBeShippedException);
+    expect(() => useCase.run(orderId)).toThrow(OrderCannotBeShippedException);
     expect(orderRepository.getSavedOrder()).toBe(null);
     expect(shipmentService.getShippedOrder()).toBe(null);
   });
@@ -57,10 +53,9 @@ describe('OrderShipmentUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderShipmentRequest = new OrderShipmentRequest();
-    request.setOrderId(3);
+    const orderId: number = 3;
 
-    expect(() => useCase.run(request)).toThrow(OrderCannotBeShippedException);
+    expect(() => useCase.run(orderId)).toThrow(OrderCannotBeShippedException);
     expect(orderRepository.getSavedOrder()).toBe(null);
     expect(shipmentService.getShippedOrder()).toBe(null);
   });
@@ -72,10 +67,9 @@ describe('OrderShipmentUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderShipmentRequest = new OrderShipmentRequest();
-    request.setOrderId(4);
+    const orderId: number = 4;
 
-    expect(() => useCase.run(request)).toThrow(OrderCannotBeShippedTwiceException);
+    expect(() => useCase.run(orderId)).toThrow(OrderCannotBeShippedTwiceException);
     expect(orderRepository.getSavedOrder()).toBe(null);
     expect(shipmentService.getShippedOrder()).toBe(null);
   });

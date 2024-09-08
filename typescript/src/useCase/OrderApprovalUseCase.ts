@@ -1,9 +1,9 @@
 import Order from '../domain/Order/Order';
 import OrderRepository from '../repository/OrderRepository';
-import ApprovedOrderCannotBeRejectedException from './ApprovedOrderCannotBeRejectedException';
-import OrderApprovalRequest from './OrderApprovalRequest';
-import RejectedOrderCannotBeApprovedException from './RejectedOrderCannotBeApprovedException';
-import ShippedOrdersCannotBeChangedException from './ShippedOrdersCannotBeChangedException';
+import ApprovedOrderCannotBeRejectedException from './Exceptions/ApprovedOrderCannotBeRejectedException';
+import OrderApprovalRequest from '../domain/OrderApprovalRequest/OrderApprovalRequest';
+import RejectedOrderCannotBeApprovedException from './Exceptions/RejectedOrderCannotBeApprovedException';
+import ShippedOrdersCannotBeChangedException from './Exceptions/ShippedOrdersCannotBeChangedException';
 
 class OrderApprovalUseCase {
   private readonly orderRepository: OrderRepository;
