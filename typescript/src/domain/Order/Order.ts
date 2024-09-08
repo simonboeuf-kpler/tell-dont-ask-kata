@@ -10,15 +10,11 @@ import OrderCannotBeShippedTwiceException from '../Exceptions/OrderCannotBeShipp
 class Order {
   constructor(
     public readonly items: OrderItem[],
-    private status: OrderStatus,
+    public readonly status: OrderStatus,
     public readonly id: number
   ) {}
 
-  public getStatus(): OrderStatus {
-    return this.status;
-  }
-
-  public computeTotal(): number {
+  public computeTaxIncludedPrice(): number {
     return this.items.reduce(
       (sum, item) => sum + item.computeTaxIncludedPrice(), 0
     );
@@ -26,11 +22,11 @@ class Order {
 
   public computeTaxAmount(): number {
     return this.items.reduce(
-      (sum, item) => sum + item.computeTax(), 0
+      (sum, item) => sum + item.computeTaxAmount(), 0
     );
   }
 
-  public ship(): void {
+  public ship(): Order {
     if (this.status === OrderStatus.CREATED || this.status === OrderStatus.REJECTED) {
       throw new OrderCannotBeShippedException();
     }
@@ -39,10 +35,10 @@ class Order {
       throw new OrderCannotBeShippedTwiceException();
     }
 
-    this.status = OrderStatus.SHIPPED;
+    return new Order(this.items, OrderStatus.SHIPPED, this.id);
   }
 
-  public handleApprovalRequest(request: OrderApprovalRequest): void {
+  public handleApprovalRequest(request: OrderApprovalRequest): Order {
     if (this.status === OrderStatus.SHIPPED) {
       throw new ShippedOrdersCannotBeChangedException();
     }
@@ -55,11 +51,18 @@ class Order {
       throw new ApprovedOrderCannotBeRejectedException();
     }
 
-    if(request.approved) {
-      this.status = OrderStatus.APPROVED;
-    } else {
-      this.status = OrderStatus.REJECTED;
+    if(!request.approved) {
+      return new Order(
+        this.items,
+        OrderStatus.REJECTED,
+        this.id
+      );
     }
+    return new Order(
+      this.items,
+      OrderStatus.APPROVED,
+      this.id
+    );
   }
 }
 

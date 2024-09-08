@@ -27,20 +27,20 @@ describe('OrderApprovalUseCase', () => {
     useCase.run(request);
 
     const insertedOrder: Order = orderRepository.getSavedOrder();
-    expect(insertedOrder.getStatus()).toBe(OrderStatus.CREATED);
-    expect(insertedOrder.computeTotal()).toBe(23.20);
+    expect(insertedOrder.status).toBe(OrderStatus.CREATED);
+    expect(insertedOrder.computeTaxIncludedPrice()).toBe(23.20);
     expect(insertedOrder.computeTaxAmount()).toBe((2.13));
     expect(insertedOrder.items.length).toBe(2);
     expect(insertedOrder.items[0].product.getName()).toBe('salad');
     expect(insertedOrder.items[0].product.getPrice()).toBe(3.56);
     expect(insertedOrder.items[0].quantity).toBe(2);
     expect(insertedOrder.items[0].computeTaxIncludedPrice()).toBe(7.84);
-    expect(insertedOrder.items[0].computeTax()).toBe(0.72);
+    expect(insertedOrder.items[0].computeTaxAmount()).toBe(0.72);
     expect(insertedOrder.items[1].product.getName()).toBe('tomato');
     expect(insertedOrder.items[1].product.getPrice()).toBe(4.65);
     expect(insertedOrder.items[1].quantity).toBe(3);
     expect(insertedOrder.items[1].computeTaxIncludedPrice()).toBe(15.36);
-    expect(insertedOrder.items[1].computeTax()).toBe(1.41);
+    expect(insertedOrder.items[1].computeTaxAmount()).toBe(1.41);
   });
 
   it('unknownProduct', () => {

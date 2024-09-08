@@ -13,11 +13,10 @@ class OrderShipmentUseCase {
 
   public run(orderId: number): void {
     const order: Order = this.orderRepository.getById(orderId);
+    const updatedOrder = order.ship();
 
-    order.ship();
-    this.shipmentService.ship(order);
-
-    this.orderRepository.save(order);
+    this.shipmentService.ship(updatedOrder);
+    this.orderRepository.save(updatedOrder);
   }
 }
 

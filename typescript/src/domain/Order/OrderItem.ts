@@ -16,7 +16,7 @@ class OrderItem {
     return new PriceRounder(this.product.computeTaxedPrice() * this.quantity).compute();
   }
 
-  public computeTax(): number {
+  public computeTaxAmount(): number {
     return new PriceRounder(this.computeTaxIncludedPrice() - this.computeTaxExcludedPrice()).compute();
   }
 }

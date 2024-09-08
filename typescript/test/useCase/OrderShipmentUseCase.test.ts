@@ -28,8 +28,10 @@ describe('OrderShipmentUseCase', () => {
     const orderId = 1;
     useCase.run(orderId);
 
-    expect(orderRepository.getSavedOrder().getStatus()).toBe(OrderStatus.SHIPPED);
-    expect(shipmentService.getShippedOrder()).toBe(initialOrder);
+    expect(orderRepository.getSavedOrder().status).toBe(OrderStatus.SHIPPED);
+    expect(shipmentService.getShippedOrder().id).toBe(initialOrder.id);
+    expect(shipmentService.getShippedOrder().items).toBe(initialOrder.items);
+    expect(shipmentService.getShippedOrder().status).toBe(OrderStatus.SHIPPED);
   });
 
   it('createdOrdersCannotBeShipped', () => {

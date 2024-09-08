@@ -6,7 +6,6 @@ import OrderApprovalUseCase from '../../src/useCase/OrderApprovalUseCase';
 import RejectedOrderCannotBeApprovedException from '../../src/domain/Exceptions/RejectedOrderCannotBeApprovedException';
 import ShippedOrdersCannotBeChangedException from '../../src/domain/Exceptions/ShippedOrdersCannotBeChangedException';
 import TestOrderRepository from '../doubles/TestOrderRepository';
-import OrderApprovalRequestBuilder from '../../src/domain/OrderApprovalRequest/OrderApprovalRequestBuilder';
 import TestOrderBuilder from '../doubles/TestOrderBuilder';
 
 describe('OrderApprovalUseCase', () => {
@@ -24,15 +23,12 @@ describe('OrderApprovalUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderApprovalRequest = new OrderApprovalRequestBuilder()
-      .setId(1)
-      .approve()
-      .build();
+    const request: OrderApprovalRequest = new OrderApprovalRequest(1, true);
 
     useCase.run(request);
 
     const savedOrder: Order = orderRepository.getSavedOrder();
-    expect(savedOrder.getStatus()).toBe(OrderStatus.APPROVED);
+    expect(savedOrder.status).toBe(OrderStatus.APPROVED);
   });
 
   it('rejectedExistingOrder', () => {
@@ -43,15 +39,12 @@ describe('OrderApprovalUseCase', () => {
 
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderApprovalRequest = new OrderApprovalRequestBuilder()
-      .setId(1)
-      .deny()
-      .build();
+    const request: OrderApprovalRequest = new OrderApprovalRequest(1, false);
 
     useCase.run(request);
 
     const savedOrder: Order = orderRepository.getSavedOrder();
-    expect(savedOrder.getStatus()).toBe(OrderStatus.REJECTED);
+    expect(savedOrder.status).toBe(OrderStatus.REJECTED);
   });
 
   it('cannotApproveRejectedOrder', () => {
@@ -61,10 +54,7 @@ describe('OrderApprovalUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderApprovalRequest = new OrderApprovalRequestBuilder()
-      .setId(1)
-      .approve()
-      .build();
+    const request: OrderApprovalRequest = new OrderApprovalRequest(1, true);
 
     expect(() => useCase.run(request)).toThrow(RejectedOrderCannotBeApprovedException);
     expect(orderRepository.getSavedOrder()).toBe(null);
@@ -77,10 +67,7 @@ describe('OrderApprovalUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderApprovalRequest = new OrderApprovalRequestBuilder()
-      .setId(1)
-      .deny()
-      .build();
+    const request: OrderApprovalRequest = new OrderApprovalRequest(1, false);
 
     expect(() =>  useCase.run(request)).toThrow(ApprovedOrderCannotBeRejectedException);
     expect(orderRepository.getSavedOrder()).toBe(null);
@@ -93,10 +80,7 @@ describe('OrderApprovalUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderApprovalRequest = new OrderApprovalRequestBuilder()
-      .setId(1)
-      .approve()
-      .build();
+    const request: OrderApprovalRequest = new OrderApprovalRequest(1, true);
 
     expect(() => useCase.run(request)).toThrow(ShippedOrdersCannotBeChangedException);
     expect(orderRepository.getSavedOrder()).toBe(null);
@@ -109,10 +93,7 @@ describe('OrderApprovalUseCase', () => {
       .build();
     orderRepository.addOrder(initialOrder);
 
-    const request: OrderApprovalRequest = new OrderApprovalRequestBuilder()
-      .setId(1)
-      .deny()
-      .build();
+    const request: OrderApprovalRequest = new OrderApprovalRequest(1, false);
 
     expect(() => useCase.run(request)).toThrow(ShippedOrdersCannotBeChangedException);
     expect(orderRepository.getSavedOrder()).toBe(null);

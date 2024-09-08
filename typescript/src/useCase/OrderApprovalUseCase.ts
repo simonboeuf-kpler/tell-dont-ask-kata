@@ -11,10 +11,9 @@ class OrderApprovalUseCase {
 
   public run(request: OrderApprovalRequest): void {
     const order: Order = this.orderRepository.getById(request.orderId);
+    const updatedOrder = order.handleApprovalRequest(request);
 
-    order.handleApprovalRequest(request);
-
-    this.orderRepository.save(order);
+    this.orderRepository.save(updatedOrder);
   }
 }
 
