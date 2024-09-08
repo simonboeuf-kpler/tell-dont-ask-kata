@@ -9,6 +9,29 @@ class Order {
   private status: OrderStatus;
   private id: number;
 
+  constructor({
+    total,
+    currency,
+    items,
+    tax,
+    status,
+    id,
+  }: {
+    total?: number;
+    currency?: string;
+    items?: OrderItem[];
+    tax?: number;
+    status?: OrderStatus;
+    id?: number;
+  } = {}) {
+    this.total = total;
+    this.currency = currency;
+    this.items = items;
+    this.tax = tax;
+    this.status = status;
+    this.id = id;
+  }
+
   public getTotal(): number {
     return this.total;
   }
@@ -21,16 +44,8 @@ class Order {
     return this.currency;
   }
 
-  public setCurrency(currency: string): void {
-    this.currency = currency;
-  }
-
   public getItems(): OrderItem[] {
     return this.items;
-  }
-
-  public setItems(items: OrderItem[]): void {
-    this.items = items;
   }
 
   public getTax(): number {
@@ -75,6 +90,16 @@ class Order {
 
   public reject(): void {
     this.status = OrderStatus.REJECTED;
+  }
+
+  public static create(): Order {
+    return new Order({
+      total: 0,
+      tax: 0,
+      currency: 'EUR',
+      items: [],
+      status: OrderStatus.CREATED
+    });
   }
 }
 
