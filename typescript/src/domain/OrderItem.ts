@@ -11,24 +11,24 @@ class OrderItem {
     return this.product;
   }
 
-  public setProduct(product: Product): void {
-    this.product = product;
-  }
-
   public getQuantity(): number {
     return this.quantity;
   }
 
-  public setQuantity(quantity: number): void {
-    this.quantity = quantity;
+  private computeTaxExcludedPrice(): number {
+    return this.round(this.product.getPrice() * this.quantity);
   }
 
-  public computeTaxedAmount(): number {
-    return this.product.computeTaxedAmount(this.quantity);
+  public computeTaxIncludedPrice(): number {
+    return this.round(this.product.computeTaxedPrice() * this.quantity);
   }
 
   public computeTax(): number {
-    return this.product.computeUnitaryTax() * this.quantity;
+    return this.round(this.computeTaxIncludedPrice() - this.computeTaxExcludedPrice());
+  }
+
+  private round(price: number): number {
+    return Math.round(price * 100) / 100;
   }
 }
 

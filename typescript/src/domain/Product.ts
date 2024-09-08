@@ -16,13 +16,10 @@ class Product {
     return this.price;
   }
 
-  public computeUnitaryTax(): number {
-    return Math.round(this.price / 100 * this.category.getTaxPercentage() * 100) / 100;
-  }
 
-  public computeTaxedAmount(quantity: number): number {
-    const unitaryTaxedAmount = this.price + this.computeUnitaryTax();
-    return Math.round(unitaryTaxedAmount * quantity * 100) / 100;
+  public computeTaxedPrice(): number {
+    const taxAmount = Math.round(this.price / 100 * this.category.getTaxPercentage() * 100) / 100;
+    return this.price + taxAmount;
   }
 }
 

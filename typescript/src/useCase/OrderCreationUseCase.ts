@@ -4,7 +4,7 @@ import OrderRepository from '../repository/OrderRepository';
 import { ProductCatalog } from '../repository/ProductCatalog';
 import SellItemsRequest from './SellItemsRequest';
 import UnknownProductException from './UnknownProductException';
-import Order from '../domain/Order';
+import {OrderBuilder} from '../domain/Order';
 
 class OrderCreationUseCase {
   private readonly orderRepository: OrderRepository;
@@ -16,7 +16,7 @@ class OrderCreationUseCase {
   }
 
   public run(request: SellItemsRequest): void {
-    const order = Order.create();
+    const orderBuilder = new OrderBuilder();
 
     for (const itemRequest of request.getRequests()) {
       const product: Product = this.productCatalog.getByName(itemRequest.getProductName());
@@ -24,16 +24,14 @@ class OrderCreationUseCase {
       if (product === undefined) {
         throw new UnknownProductException();
       }
+
       else {
         const orderItem: OrderItem = new OrderItem(product, itemRequest.getQuantity());
-
-        order.getItems().push(orderItem);
-        order.setTotal(order.getTotal() + orderItem.computeTaxedAmount());
-        order.setTax(order.getTax() + orderItem.computeTax());
+        orderBuilder.addItem(orderItem);
       }
     }
 
-    this.orderRepository.save(order);
+    this.orderRepository.save(orderBuilder.build());
   }
 }
 

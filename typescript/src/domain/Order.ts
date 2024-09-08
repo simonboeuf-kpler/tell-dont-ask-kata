@@ -2,42 +2,26 @@ import OrderItem from './OrderItem';
 import {OrderStatus} from './OrderStatus';
 
 class Order {
-  private total: number;
   private currency: string;
   private items: OrderItem[];
-  private tax: number;
   private status: OrderStatus;
   private id: number;
 
   constructor({
-    total,
     currency,
     items,
-    tax,
     status,
     id,
   }: {
-    total?: number;
     currency?: string;
     items?: OrderItem[];
-    tax?: number;
     status?: OrderStatus;
     id?: number;
   } = {}) {
-    this.total = total;
     this.currency = currency;
     this.items = items;
-    this.tax = tax;
     this.status = status;
     this.id = id;
-  }
-
-  public getTotal(): number {
-    return this.total;
-  }
-
-  public setTotal(total: number): void  {
-    this.total = total;
   }
 
   public getCurrency(): string {
@@ -46,14 +30,6 @@ class Order {
 
   public getItems(): OrderItem[] {
     return this.items;
-  }
-
-  public getTax(): number {
-    return this.tax;
-  }
-
-  public setTax(tax: number): void {
-    this.tax = tax;
   }
 
   public getStatus(): OrderStatus {
@@ -92,13 +68,42 @@ class Order {
     this.status = OrderStatus.REJECTED;
   }
 
-  public static create(): Order {
+  public computeTotal(): number {
+    return this.items.reduce(
+      (sum, item) => sum + item.computeTaxIncludedPrice(), 0
+    );
+  }
+
+  public computeTaxAmount(): number {
+    return this.items.reduce(
+      (sum, item) => sum + item.computeTax(), 0
+    );
+  }
+}
+
+export class OrderBuilder {
+  private currency: string;
+  private items: OrderItem[];
+  private status: OrderStatus;
+  private id: number;
+
+  constructor() {
+    this.items = [];
+    this.status = OrderStatus.CREATED;
+    this.currency = 'EUR'; // bof
+  }
+
+  addItem(item: OrderItem): OrderBuilder {
+    this.items = [...this.items, item];
+    return this;
+  }
+
+  build(): Order {
     return new Order({
-      total: 0,
-      tax: 0,
-      currency: 'EUR',
-      items: [],
-      status: OrderStatus.CREATED
+      currency: this.currency,
+      items: this.items,
+      status: this.status,
+      id: this.id
     });
   }
 }
