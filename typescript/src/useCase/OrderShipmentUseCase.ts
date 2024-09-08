@@ -1,4 +1,4 @@
-import Order from '../domain/Order';
+import Order from '../domain/Order/Order';
 import { OrderStatus } from '../domain/OrderStatus';
 import OrderRepository from '../repository/OrderRepository';
 import { ShipmentService } from '../service/ShipmentService';

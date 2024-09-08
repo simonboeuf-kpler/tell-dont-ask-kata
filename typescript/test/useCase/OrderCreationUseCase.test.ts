@@ -1,5 +1,5 @@
 import Category from '../../src/domain/Category';
-import Order from '../../src/domain/Order';
+import Order from '../../src/domain/Order/Order';
 import { OrderStatus } from '../../src/domain/OrderStatus';
 import Product from '../../src/domain/Product';
 import { ProductCatalog } from '../../src/repository/ProductCatalog';

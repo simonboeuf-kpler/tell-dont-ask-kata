@@ -1,28 +1,15 @@
-import OrderItem from './OrderItem';
-import {OrderStatus} from './OrderStatus';
+import OrderItem from '../OrderItem';
+import {OrderStatus} from '../OrderStatus';
 
 class Order {
-  private currency: string;
-  private items: OrderItem[];
-  private status: OrderStatus;
-  private id: number;
 
-  constructor({
-    currency,
-    items,
-    status,
-    id,
-  }: {
-    currency?: string;
-    items?: OrderItem[];
-    status?: OrderStatus;
-    id?: number;
-  } = {}) {
-    this.currency = currency;
-    this.items = items;
-    this.status = status;
-    this.id = id;
-  }
+
+  constructor(
+    private currency: string,
+    private items: OrderItem[],
+    private status: OrderStatus,
+    private id: number
+  ) {}
 
   public getCurrency(): string {
     return this.currency;
@@ -78,33 +65,6 @@ class Order {
     return this.items.reduce(
       (sum, item) => sum + item.computeTax(), 0
     );
-  }
-}
-
-export class OrderBuilder {
-  private currency: string;
-  private items: OrderItem[];
-  private status: OrderStatus;
-  private id: number;
-
-  constructor() {
-    this.items = [];
-    this.status = OrderStatus.CREATED;
-    this.currency = 'EUR'; // bof
-  }
-
-  addItem(item: OrderItem): OrderBuilder {
-    this.items = [...this.items, item];
-    return this;
-  }
-
-  build(): Order {
-    return new Order({
-      currency: this.currency,
-      items: this.items,
-      status: this.status,
-      id: this.id
-    });
   }
 }
 

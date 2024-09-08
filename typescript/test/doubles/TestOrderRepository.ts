@@ -1,4 +1,4 @@
-import Order from '../../src/domain/Order';
+import Order from '../../src/domain/Order/Order';
 import OrderRepository from '../../src/repository/OrderRepository';
 
 class TestOrderRepository implements OrderRepository {

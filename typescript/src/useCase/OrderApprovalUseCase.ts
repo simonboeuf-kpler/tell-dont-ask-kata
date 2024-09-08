@@ -1,4 +1,4 @@
-import Order from '../domain/Order';
+import Order from '../domain/Order/Order';
 import OrderRepository from '../repository/OrderRepository';
 import ApprovedOrderCannotBeRejectedException from './ApprovedOrderCannotBeRejectedException';
 import OrderApprovalRequest from './OrderApprovalRequest';
