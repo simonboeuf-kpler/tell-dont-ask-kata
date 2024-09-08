@@ -1,5 +1,4 @@
 import Order from '../domain/Order';
-import { OrderStatus } from '../domain/OrderStatus';
 import OrderRepository from '../repository/OrderRepository';
 import ApprovedOrderCannotBeRejectedException from './ApprovedOrderCannotBeRejectedException';
 import OrderApprovalRequest from './OrderApprovalRequest';
@@ -16,19 +15,24 @@ class OrderApprovalUseCase {
   public run(request: OrderApprovalRequest): void {
     const order: Order = this.orderRepository.getById(request.getOrderId());
 
-    if (order.getStatus() === OrderStatus.SHIPPED) {
+    if (order.isAlreadyShipped()) {
       throw new ShippedOrdersCannotBeChangedException();
     }
 
-    if (request.isApproved() && order.getStatus() === OrderStatus.REJECTED) {
+    if (request.isApproved() && order.isRejected()) {
       throw new RejectedOrderCannotBeApprovedException();
     }
 
-    if (!request.isApproved() && order.getStatus() === OrderStatus.APPROVED) {
+    if (!request.isApproved() && order.isApproved()) {
       throw new ApprovedOrderCannotBeRejectedException();
     }
 
-    order.setStatus(request.isApproved() ? OrderStatus.APPROVED : OrderStatus.REJECTED);
+    if(request.isApproved()) {
+      order.approve();
+    } else {
+      order.reject();
+    }
+
     this.orderRepository.save(order);
   }
 }

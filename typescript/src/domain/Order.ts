@@ -1,5 +1,5 @@
 import OrderItem from './OrderItem';
-import { OrderStatus } from './OrderStatus';
+import {OrderStatus} from './OrderStatus';
 
 class Order {
   private total: number;
@@ -55,6 +55,26 @@ class Order {
 
   public setId(id: number): void {
     this.id = id;
+  }
+
+  public isAlreadyShipped(): boolean {
+    return this.status === OrderStatus.SHIPPED;
+  }
+
+  public isApproved(): boolean {
+    return this.status === OrderStatus.APPROVED;
+  }
+
+  public isRejected(): boolean {
+    return this.status === OrderStatus.REJECTED;
+  }
+
+  public approve(): void {
+    this.status = OrderStatus.APPROVED;
+  }
+
+  public reject(): void {
+    this.status = OrderStatus.REJECTED;
   }
 }
 
